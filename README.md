@@ -8,10 +8,13 @@ O projeto busca automatizar o processo de administração de centros esportivos,
 
 ## Integrantes do grupo com nome completo
 *Aniely Carla Ferreira da Silva - anielycarlaf@gmail.com
+
 *Aline de Oliveira Barbosa - alineoliveirab23@gmail.com
+
 *Maria Eduarda de Souza - eduardasouzaa021@gmail.com
-*Laura de Lima Cavalcante -
-estudando202f@gmail.com 
+
+*Laura de Lima Cavalcante - estudando202f@gmail.com 
+
 *Tomaz Bruno Aureliano de Sant’anna Vieira - tomazbruno24@gmail.com 
 
 ---
