@@ -1,4 +1,4 @@
-package com.sistemaesportivo.pagamentos;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
