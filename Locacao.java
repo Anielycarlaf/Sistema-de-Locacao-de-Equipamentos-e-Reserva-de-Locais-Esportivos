@@ -101,5 +101,65 @@ public class Locacao {
     public void setReservaVinculada(Reserva reservaVinculada) { 
         this.reservaVinculada = reservaVinculada;
     }
+     public static void gerarRelatorioClientesMaisAtivos(List<Locacao> locacoes, List<Reserva> reservas) {
+        Map<Cliente, Integer> contadorClientes = new HashMap<>();
+
+        // Contabiliza locações
+        for (Locacao loc : locacoes) {
+            contadorClientes.merge(loc.getCliente(), 1, Integer::sum);
+        }
+
+        // Contabiliza reservas
+        for (Reserva res : reservas) {
+            contadorClientes.merge(res.getCliente(), 1, Integer::sum);
+        }
+
+        // Ordena os clientes por número de atividades (reservas + locações)
+        List<Map.Entry<Cliente, Integer>> ranking = new ArrayList<>(contadorClientes.entrySet());
+        ranking.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        System.out.println("\n===== CLIENTES MAIS ATIVOS =====");
+        int posicao = 1;
+        for (Map.Entry<Cliente, Integer> entry : ranking) {
+            System.out.println(posicao + "º - " + entry.getKey().getNome() + " → " + entry.getValue() + " atividades");
+            posicao++;
+        }
+
+        if (ranking.isEmpty()) {
+            System.out.println("Nenhum cliente encontrado.");
+        }
+        System.out.println("==================================");
+    }
+}
+public static void gerarRelatorioPorPeriodo(List<Locacao> locacoes, LocalDateTime inicio, LocalDateTime fim) {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        System.out.println("\n===== RELATÓRIO DE LOCAÇÕES =====");
+        System.out.println("Período: " + fmt.format(inicio) + " até " + fmt.format(fim));
+        System.out.println("==================================");
+
+        int totalLocacoes = 0;
+        double totalMultas = 0.0;
+
+        for (Locacao loc : locacoes) {
+            if (loc.getDataEmprestimo().isAfter(inicio) && loc.getDataEmprestimo().isBefore(fim)) {
+                totalLocacoes++;
+                totalMultas += loc.getMulta();
+
+                System.out.println("\nID: " + loc.getId());
+                System.out.println("Cliente: " + loc.getCliente().getNome());
+                System.out.println("Data Empréstimo: " + fmt.format(loc.getDataEmprestimo()));
+                System.out.println("Data Prevista: " + fmt.format(loc.getDataDevolucaoPrevista()));
+                System.out.println("Status: " + loc.getStatus());
+                System.out.println("Multa: R$ " + String.format("%.2f", loc.getMulta()));
+            }
+        }
+
+        System.out.println("\n----------------------------------");
+        System.out.println("Total de locações no período: " + totalLocacoes);
+        System.out.println("Total arrecadado em multas: R$ " + String.format("%.2f", totalMultas));
+        System.out.println("==================================");
+    }
+}
 }
 
