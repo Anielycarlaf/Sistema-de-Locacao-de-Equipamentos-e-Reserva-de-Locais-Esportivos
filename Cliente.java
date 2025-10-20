@@ -8,6 +8,7 @@ public class Cliente {
     private String email;
     private List<Reserva> historicoReservas;
     private List<Locacao> historicoLocacoes;
+    private boolean possuiPendencias;
 
     public Cliente() {}
 
@@ -69,6 +70,14 @@ public class Cliente {
     }
     public void setHistoricoLocacoes(List<Locacao> historicoLocacoes) {
         this.historicoLocacoes = historicoLocacoes;
+    }
+
+    public boolean isHabilitado() {
+        if (possuiPendencias) {
+            System.out.println("Erro: Cliente " + nome + " possui pendências de devolução ou pagamento.");
+            return false;
+        }
+        return true;
     }
 }
 
