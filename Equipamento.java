@@ -86,6 +86,47 @@ public class Equipamento {
         }
         return true;
     }
-    
+    public static void gerarRelatorioEquipamentosMaisLocados(List<Locacao> locacoes,
+                                                             LocalDateTime inicio,
+                                                             LocalDateTime fim) {
+        Map<Equipamento, Integer> contadorEquipamentos = new HashMap<>();
+
+        // Contabiliza o uso de cada equipamento dentro do período
+        for (Locacao loc : locacoes) {
+            if (loc.getDataEmprestimo().isAfter(inicio) && loc.getDataEmprestimo().isBefore(fim)) {
+                for (Map.Entry<Equipamento, Integer> entry : loc.getEquipamentosLocados().entrySet()) {
+                    Equipamento eq = entry.getKey();
+                    int qtd = entry.getValue();
+                    contadorEquipamentos.merge(eq, qtd, Integer::sum);
+                }
+            }
+        }
+
+        // Ordena os equipamentos pelo número total de locações (decrescente)
+        List<Map.Entry<Equipamento, Integer>> ranking = new ArrayList<>(contadorEquipamentos.entrySet());
+        ranking.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        System.out.println("\n===== RELATÓRIO: EQUIPAMENTOS MAIS LOCADOS =====");
+        System.out.println("Período: " + inicio + " até " + fim);
+        System.out.println("===============================================");
+
+        if (ranking.isEmpty()) {
+            System.out.println("Nenhum equipamento foi locado nesse período.");
+        } else {
+            int posicao = 1;
+            for (Map.Entry<Equipamento, Integer> entry : ranking) {
+                Equipamento eq = entry.getKey();
+                System.out.println(posicao + "º - " + eq.getNome());
+                System.out.println("Tipo: " + eq.getTipo());
+                System.out.println("Local: " + eq.getLocalAssociado().getNome());
+                System.out.println("Total de unidades locadas: " + entry.getValue());
+                System.out.println("-----------------------------------------------");
+                posicao++;
+            }
+        }
+
+        System.out.println("===============================================");
+    }
+}
 }
 
