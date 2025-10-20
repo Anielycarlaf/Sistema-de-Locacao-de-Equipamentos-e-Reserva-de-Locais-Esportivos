@@ -77,5 +77,15 @@ public class Equipamento {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public boolean validarQuantidade(int quantidadeSolicitada) {
+        if (quantidadeSolicitada > quantidade) {
+            System.out.println("Erro: Quantidade solicitada de " + nome +
+                               " excede o estoque disponível (" + quantidade + ").");
+            return false;
+        }
+        return true;
+    }
+    
 }
 
