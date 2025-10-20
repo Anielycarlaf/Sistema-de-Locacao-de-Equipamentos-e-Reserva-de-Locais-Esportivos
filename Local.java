@@ -70,4 +70,12 @@ public class Local {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public boolean validarCapacidade(int participantes) {
+        if (participantes > capacidade) {
+            System.out.println("Erro: O número de participantes excede a capacidade máxima do local (" + capacidade + ").");
+            return false;
+        }
+        return true;
+    }
 }
