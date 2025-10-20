@@ -1,6 +1,6 @@
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class Locacao {
     private int id;
@@ -14,6 +14,7 @@ public class Locacao {
     private Pagamento pagamento;
     private Reserva reservaVinculada; // opcional: locação pode vir de uma reserva
 
+    // ===== CONSTRUTORES =====
     public Locacao() {}
 
     public Locacao(int id, Cliente cliente, Map<Equipamento, Integer> equipamentosLocados,
@@ -32,76 +33,41 @@ public class Locacao {
         this.reservaVinculada = reservaVinculada;
     }
 
-    public int getId() { 
-        return id;
-    }
-    public void setId(int id) { 
-        this.id = id; 
-    }
+    // ===== GETTERS E SETTERS =====
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-    public void setCliente(Cliente cliente) { 
-        this.cliente = cliente;
-    }
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
 
-    public Map<Equipamento, Integer> getEquipamentosLocados() { 
-        return equipamentosLocados;
-    }
-    public void setEquipamentosLocados(Map<Equipamento, Integer> equipamentosLocados) {
-        this.equipamentosLocados = equipamentosLocados;
-    
-    }
-    public LocalDateTime getDataEmprestimo() {
-        return dataEmprestimo;
-    }
-    public void setDataEmprestimo(LocalDateTime dataEmprestimo) {
-        this.dataEmprestimo = dataEmprestimo;
-    }
+    public Map<Equipamento, Integer> getEquipamentosLocados() { return equipamentosLocados; }
+    public void setEquipamentosLocados(Map<Equipamento, Integer> equipamentosLocados) { this.equipamentosLocados = equipamentosLocados; }
 
-    public LocalDateTime getDataDevolucaoPrevista() { 
-        return dataDevolucaoPrevista; 
-    }
-    public void setDataDevolucaoPrevista(LocalDateTime dataDevolucaoPrevista) { 
-        this.dataDevolucaoPrevista = dataDevolucaoPrevista;
-    }
+    public LocalDateTime getDataEmprestimo() { return dataEmprestimo; }
+    public void setDataEmprestimo(LocalDateTime dataEmprestimo) { this.dataEmprestimo = dataEmprestimo; }
 
-    public LocalDateTime getDataDevolucaoReal() { 
-        return dataDevolucaoReal;
-    }
-    public void setDataDevolucaoReal(LocalDateTime dataDevolucaoReal) { 
-        this.dataDevolucaoReal = dataDevolucaoReal;
-    }
+    public LocalDateTime getDataDevolucaoPrevista() { return dataDevolucaoPrevista; }
+    public void setDataDevolucaoPrevista(LocalDateTime dataDevolucaoPrevista) { this.dataDevolucaoPrevista = dataDevolucaoPrevista; }
 
-    public double getMulta() { 
-        return multa;
-    }
-    public void setMulta(double multa) { 
-        this.multa = multa;
-    }
+    public LocalDateTime getDataDevolucaoReal() { return dataDevolucaoReal; }
+    public void setDataDevolucaoReal(LocalDateTime dataDevolucaoReal) { this.dataDevolucaoReal = dataDevolucaoReal; }
 
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public double getMulta() { return multa; }
+    public void setMulta(double multa) { this.multa = multa; }
 
-    public Pagamento getPagamento() { 
-        return pagamento;
-    }
-    public void setPagamento(Pagamento pagamento) {
-        this.pagamento = pagamento; 
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public Reserva getReservaVinculada() { 
-        return reservaVinculada;
-    }
-    public void setReservaVinculada(Reserva reservaVinculada) { 
-        this.reservaVinculada = reservaVinculada;
-    }
-     public static void gerarRelatorioClientesMaisAtivos(List<Locacao> locacoes, List<Reserva> reservas) {
+    public Pagamento getPagamento() { return pagamento; }
+    public void setPagamento(Pagamento pagamento) { this.pagamento = pagamento; }
+
+    public Reserva getReservaVinculada() { return reservaVinculada; }
+    public void setReservaVinculada(Reserva reservaVinculada) { this.reservaVinculada = reservaVinculada; }
+
+    // ==========================================================
+    // MÉTODO 1: Relatório de clientes mais ativos
+    // ==========================================================
+    public static void gerarRelatorioClientesMaisAtivos(List<Locacao> locacoes, List<Reserva> reservas) {
         Map<Cliente, Integer> contadorClientes = new HashMap<>();
 
         // Contabiliza locações
@@ -114,24 +80,27 @@ public class Locacao {
             contadorClientes.merge(res.getCliente(), 1, Integer::sum);
         }
 
-        // Ordena os clientes por número de atividades (reservas + locações)
+        // Ordena por número total de atividades
         List<Map.Entry<Cliente, Integer>> ranking = new ArrayList<>(contadorClientes.entrySet());
         ranking.sort((a, b) -> b.getValue().compareTo(a.getValue()));
 
         System.out.println("\n===== CLIENTES MAIS ATIVOS =====");
-        int posicao = 1;
-        for (Map.Entry<Cliente, Integer> entry : ranking) {
-            System.out.println(posicao + "º - " + entry.getKey().getNome() + " → " + entry.getValue() + " atividades");
-            posicao++;
-        }
-
         if (ranking.isEmpty()) {
             System.out.println("Nenhum cliente encontrado.");
+        } else {
+            int posicao = 1;
+            for (Map.Entry<Cliente, Integer> entry : ranking) {
+                System.out.println(posicao + "º - " + entry.getKey().getNome() + " → " + entry.getValue() + " atividades");
+                posicao++;
+            }
         }
         System.out.println("==================================");
     }
-}
-public static void gerarRelatorioPorPeriodo(List<Locacao> locacoes, LocalDateTime inicio, LocalDateTime fim) {
+
+    // ==========================================================
+    // MÉTODO 2: Relatório de locações por período
+    // ==========================================================
+    public static void gerarRelatorioPorPeriodo(List<Locacao> locacoes, LocalDateTime inicio, LocalDateTime fim) {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         System.out.println("\n===== RELATÓRIO DE LOCAÇÕES =====");
@@ -161,5 +130,3 @@ public static void gerarRelatorioPorPeriodo(List<Locacao> locacoes, LocalDateTim
         System.out.println("==================================");
     }
 }
-}
-
