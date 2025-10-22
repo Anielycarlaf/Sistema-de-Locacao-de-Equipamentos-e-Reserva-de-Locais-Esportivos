@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
+package dao;
+import model.*;
+
 
 public class LocacaoCRUD {
     private List<Locacao> locacoes = new ArrayList<>();
