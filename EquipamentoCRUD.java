@@ -1,11 +1,12 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EquipamentoDAO {
+public class EquipamentoCRUD {
     private List<Equipamento> equipamentos = new ArrayList<>();
     private int proximoId = 1;
 
     public void adicionar(Equipamento e) {
-        e = new Equipamento(proximoId++, e.getNome(), e.getTipo(), e.getQuantidade(), e.getValorLocacao(), e.getCondicao());
+        e.setId(proximoId++);
         equipamentos.add(e);
     }
 
