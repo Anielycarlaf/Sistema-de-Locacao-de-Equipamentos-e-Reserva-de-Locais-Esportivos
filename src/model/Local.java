@@ -1,4 +1,5 @@
 import java.util.List;
+package model;
 
 public class Local {
     private int id;
