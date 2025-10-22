@@ -1,6 +1,6 @@
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+package model;
 public class Pagamento {
 
     public enum StatusPagamento {
