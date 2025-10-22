@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+package dao;
+import model.*;
+
 public class ClienteCRUD {
     private List<Cliente> clientes = new ArrayList<>();
     private int proximoId = 1;
