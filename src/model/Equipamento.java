@@ -5,6 +5,9 @@ import java.util.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 
+package model;
+
+
 public class Equipamento {
     private int id;
     private String nome;
