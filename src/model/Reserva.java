@@ -1,6 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.List;
-
+package model;
 public class Reserva {
     private int id;
     private Cliente cliente;
