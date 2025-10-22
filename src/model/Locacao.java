@@ -2,6 +2,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+package model;
+
 public class Locacao {
     private int id;
     private Cliente cliente;
