@@ -5,6 +5,7 @@ public class Reserva {
     private int id;
     private Cliente cliente;
     private Local local;
+    private List<String> participantes;
     private List<Equipamento> equipamentos;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
@@ -46,6 +47,13 @@ public class Reserva {
     }
     public void setLocal(Local local) {
         this.local = local;
+    }
+    public List<String> getParticipantes() {
+    return participantes;
+    }
+
+    public void setParticipantes(List<String> participantes) {
+    this.participantes = participantes;
     }
 
     public List<Equipamento> getEquipamentos() {
