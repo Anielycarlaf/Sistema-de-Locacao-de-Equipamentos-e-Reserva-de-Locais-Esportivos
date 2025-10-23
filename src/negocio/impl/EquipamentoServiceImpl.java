@@ -1,52 +1,24 @@
-package com.sistemaesportivo.service.impl;
-
-import com.sistemaesportivo.model.Equipamento;
-import com.sistemaesportivo.negocio.EquipamentoNegocio;
-import com.sistemaesportivo.negocio.impl.EquipamentoNegocioImpl;
-import com.sistemaesportivo.repository.EquipamentoRepository;
-import com.sistemaesportivo.service.EquipamentoService;
 import java.util.List;
+import model.Equipamento;
+import dao.EquipamentoDAO;
+import negocio.IEquipamentoService;
 
-public class EquipamentoServiceImpl implements EquipamentoService {
+public class EquipamentoServiceImpl implements IEquipamentoService {
+    private EquipamentoDAO equipamentoDAO = new EquipamentoDAO();
 
-    private final EquipamentoNegocio equipamentoNegocio;
-
-    public EquipamentoServiceImpl(EquipamentoRepository equipamentoRepo) {
-        this.equipamentoNegocio = new EquipamentoNegocioImpl(equipamentoRepo);
+    @Override
+    public boolean verificarEstoqueDisponivel(int idEquipamento, int quantidade) {
+        Equipamento eq = equipamentoDAO.buscarPorId(idEquipamento);
+        return eq != null && eq.getQuantidadeEstoque() >= quantidade;
     }
 
     @Override
-    public Equipamento cadastrar(Equipamento equipamento) {
-        return equipamentoNegocio.cadastrar(equipamento);
+    public Equipamento buscarEquipamentoPorId(int id) {
+        return equipamentoDAO.buscarPorId(id);
     }
 
     @Override
-    public Equipamento atualizar(Equipamento equipamento) {
-        return equipamentoNegocio.atualizar(equipamento);
-    }
-
-    @Override
-    public boolean remover(Long id) {
-        return equipamentoNegocio.remover(id);
-    }
-
-    @Override
-    public Equipamento buscarPorId(Long id) {
-        return equipamentoNegocio.buscarPorId(id);
-    }
-
-    @Override
-    public List<Equipamento> listarTodos() {
-        return equipamentoNegocio.listarTodos();
-    }
-
-    @Override
-    public boolean marcarIndisponivel(Long id) {
-        return equipamentoNegocio.marcarIndisponivel(id);
-    }
-
-    @Override
-    public boolean marcarDisponivel(Long id) {
-        return equipamentoNegocio.marcarDisponivel(id);
+    public List<Equipamento> listarEquipamentos() {
+        return equipamentoDAO.listarTodos();
     }
 }
