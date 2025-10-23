@@ -1,51 +1,43 @@
-package com.sistemaesportivo.negocio.impl;
+package com.sistemaesportivo.service.impl;
 
-import com.sistemaesportivo.negocio.ClienteNegocio;
 import com.sistemaesportivo.model.Cliente;
+import com.sistemaesportivo.negocio.ClienteNegocio;
+import com.sistemaesportivo.negocio.impl.ClienteNegocioImpl;
 import com.sistemaesportivo.repository.ClienteRepository;
+import com.sistemaesportivo.service.ClienteService;
 import java.util.List;
 
-public class ClienteNegocioImpl implements ClienteNegocio {
-    private final ClienteRepository clienteRepo;
+public class ClienteServiceImpl implements ClienteService {
 
-    public ClienteNegocioImpl(ClienteRepository clienteRepo) {
-        this.clienteRepo = clienteRepo;
+    private final ClienteNegocio clienteNegocio;
+
+    public ClienteServiceImpl(ClienteRepository clienteRepo) {
+        this.clienteNegocio = new ClienteNegocioImpl(clienteRepo);
     }
 
     @Override
     public Cliente criarCliente(Cliente cliente) {
-        if (cliente.getNome() == null || cliente.getNome().isBlank()) {
-            throw new IllegalArgumentException("Nome do cliente é obrigatório");
-        }
-        return clienteRepo.save(cliente);
+        return clienteNegocio.criarCliente(cliente);
     }
 
     @Override
     public Cliente atualizarCliente(Cliente cliente) {
-        return clienteRepo.update(cliente);
+        return clienteNegocio.atualizarCliente(cliente);
     }
 
     @Override
     public boolean removerCliente(Long id) {
-        if (temPendencias(id)) {
-            throw new IllegalStateException("Cliente possui pendências e não pode ser removido");
-        }
-        return clienteRepo.deleteById(id);
+        return clienteNegocio.removerCliente(id);
     }
 
     @Override
     public Cliente buscarPorId(Long id) {
-        return clienteRepo.findById(id).orElse(null);
+        return clienteNegocio.buscarPorId(id);
     }
 
     @Override
     public List<Cliente> listarTodos() {
-        return clienteRepo.findAll();
-    }
-
-    @Override
-    public boolean temPendencias(Long clienteId) {
-        // Regra simulada — depois pode verificar reservas ou pagamentos em aberto.
-        return false;
+        return clienteNegocio.listarTodos();
     }
 }
+
