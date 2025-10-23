@@ -1,43 +1,24 @@
-package com.sistemaesportivo.service.impl;
-
-import com.sistemaesportivo.model.Cliente;
-import com.sistemaesportivo.negocio.ClienteNegocio;
-import com.sistemaesportivo.negocio.impl.ClienteNegocioImpl;
-import com.sistemaesportivo.repository.ClienteRepository;
-import com.sistemaesportivo.service.ClienteService;
 import java.util.List;
+import model.Cliente;
+import dao.ClienteDAO;
+import negocio.IClienteService;
 
-public class ClienteServiceImpl implements ClienteService {
+public class ClienteServiceImpl implements IClienteService {
+    private ClienteDAO clienteDAO = new ClienteDAO();
 
-    private final ClienteNegocio clienteNegocio;
-
-    public ClienteServiceImpl(ClienteRepository clienteRepo) {
-        this.clienteNegocio = new ClienteNegocioImpl(clienteRepo);
+    @Override
+    public boolean clientePossuiPendencias(int idCliente) {
+        Cliente cliente = clienteDAO.buscarPorId(idCliente);
+        return cliente != null && (cliente.isEmAtraso() || cliente.isComPendencias());
     }
 
     @Override
-    public Cliente criarCliente(Cliente cliente) {
-        return clienteNegocio.criarCliente(cliente);
+    public Cliente buscarClientePorId(int id) {
+        return clienteDAO.buscarPorId(id);
     }
 
     @Override
-    public Cliente atualizarCliente(Cliente cliente) {
-        return clienteNegocio.atualizarCliente(cliente);
-    }
-
-    @Override
-    public boolean removerCliente(Long id) {
-        return clienteNegocio.removerCliente(id);
-    }
-
-    @Override
-    public Cliente buscarPorId(Long id) {
-        return clienteNegocio.buscarPorId(id);
-    }
-
-    @Override
-    public List<Cliente> listarTodos() {
-        return clienteNegocio.listarTodos();
+    public List<Cliente> listarClientes() {
+        return clienteDAO.listarTodos();
     }
 }
-
