@@ -1,48 +1,46 @@
-package com.sistemaesportivo.service.impl;
-
-import com.sistemaesportivo.model.Reserva;
-import com.sistemaesportivo.negocio.ReservaNegocio;
-import com.sistemaesportivo.negocio.impl.ReservaNegocioImpl;
-import com.sistemaesportivo.repository.ReservaRepository;
-import com.sistemaesportivo.repository.EquipamentoRepository;
-import com.sistemaesportivo.repository.ClienteRepository;
-import com.sistemaesportivo.service.ReservaService;
-
 import java.util.List;
+import model.Reserva;
+import dao.ReservaDAO;
+import negocio.IReservaService;
 
-public class ReservaServiceImpl implements ReservaService {
+public class ReservaServiceImpl implements IReservaService {
+    private ReservaDAO reservaDAO = new ReservaDAO();
+    private LocalServiceImpl localService = new LocalServiceImpl();
+    private EquipamentoServiceImpl equipamentoService = new EquipamentoServiceImpl();
+    private ClienteServiceImpl clienteService = new ClienteServiceImpl();
 
-    private final ReservaNegocio reservaNegocio;
+    @Override
+    public boolean criarReserva(Reserva reserva) {
+        // REQ25: bloqueio de clientes com pendências
+        if (clienteService.clientePossuiPendencias(reserva.getCliente().getId())) {
+            System.out.println("Cliente possui pendências e não pode reservar.");
+            return false;
+        }
 
-    // Injetando dependências (repos já existem no seu projeto)
-    public ReservaServiceImpl(ReservaRepository reservaRepo,
-                              EquipamentoRepository equipamentoRepo,
-                              ClienteRepository clienteRepo) {
-        this.reservaNegocio = new ReservaNegocioImpl(reservaRepo, equipamentoRepo, clienteRepo);
+        // REQ23: verificar capacidade do local
+        if (!localService.verificarCapacidadeDisponivel(reserva.getLocal().getId(), reserva.getQtdPessoas())) {
+            System.out.println("Capacidade do local excedida.");
+            return false;
+        }
+
+        // REQ24: verificar estoque de equipamentos
+        if (!equipamentoService.verificarEstoqueDisponivel(
+                reserva.getEquipamento().getId(), reserva.getQuantidadeEquipamento())) {
+            System.out.println("Quantidade de equipamentos excede o estoque.");
+            return false;
+        }
+
+        reservaDAO.inserir(reserva);
+        return true;
     }
 
     @Override
-    public Reserva criarReserva(Reserva reserva) {
-        return reservaNegocio.criarReserva(reserva);
+    public void cancelarReserva(int idReserva) {
+        reservaDAO.remover(idReserva);
     }
 
     @Override
-    public Reserva atualizarReserva(Reserva reserva) {
-        return reservaNegocio.atualizarReserva(reserva);
-    }
-
-    @Override
-    public boolean cancelarReserva(Long id) {
-        return reservaNegocio.cancelarReserva(id);
-    }
-
-    @Override
-    public Reserva buscarPorId(Long id) {
-        return reservaNegocio.buscarPorId(id);
-    }
-
-    @Override
-    public List<Reserva> listarTodas() {
-        return reservaNegocio.listarTodas();
+    public List<Reserva> listarReservas() {
+        return reservaDAO.listarTodos();
     }
 }
